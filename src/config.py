@@ -7,6 +7,8 @@ class AppSettings(BaseSettings):
     class Config:
         env_file = ".env"
 
+    API_V1_STR: str = "/api/v1"
+
     POSTGRES_DB: str
     POSTGRES_PASSWORD: str
     POSTGRES_USER: str
