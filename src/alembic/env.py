@@ -5,6 +5,7 @@ from sqlalchemy import engine_from_config, pool
 from alembic import context
 from config import settings
 from database import Base, metadata
+from flashcards.models import Flashcard
 
 config = context.config
 
