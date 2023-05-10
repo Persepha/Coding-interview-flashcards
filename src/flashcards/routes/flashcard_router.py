@@ -7,9 +7,10 @@ from starlette.responses import Response
 
 from database import get_async_session
 from flashcards.dependencies import valid_flashcard_id
-from flashcards.models import Flashcard
-from flashcards.schemas import (FlashcardCreateModel, FlashcardModel,
-                                FlashcardUpdateModel)
+from flashcards.models.flashcard import Flashcard
+from flashcards.schemas.flashcard_schemas import (FlashcardCreateModel,
+                                                  FlashcardModel,
+                                                  FlashcardUpdateModel)
 from flashcards.service import (flashcard_create, flashcard_delete,
                                 flashcard_list, flashcard_update)
 

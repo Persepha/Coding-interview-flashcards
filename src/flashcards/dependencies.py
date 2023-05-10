@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from database import get_async_session
-from flashcards.models import Flashcard
+from flashcards.models.flashcard import Flashcard
 from flashcards.service import get_flashcard_by_id
 
 

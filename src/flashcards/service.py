@@ -4,8 +4,11 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from flashcards.models import Flashcard
-from flashcards.schemas import FlashcardCreateModel, FlashcardUpdateModel
+from flashcards.models.flashcard import Flashcard
+from flashcards.models.tag import Tag
+from flashcards.schemas.flashcard_schemas import (FlashcardCreateModel,
+                                                  FlashcardUpdateModel)
+from flashcards.schemas.tag_schemas import TagCreateModel
 
 
 async def flashcard_list(*, session: AsyncSession) -> Iterable[Flashcard]:
@@ -56,3 +59,20 @@ async def flashcard_update(
     await session.commit()
 
     return flashcard
+
+
+async def tag_list(*, session: AsyncSession) -> Iterable[Tag]:
+    query = select(Tag).order_by(Tag.id)
+    tags = await session.execute(query)
+
+    return tags.scalars().all()
+
+
+async def tag_create(*, session: AsyncSession, tag_dto: TagCreateModel) -> Tag:
+    data = tag_dto.dict()
+    new_tag = Tag(**data)
+
+    session.add(new_tag)
+    await session.commit()
+
+    return new_tag
