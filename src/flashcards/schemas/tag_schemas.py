@@ -11,3 +11,7 @@ class TagModel(BaseModel):
 
 class TagCreateModel(BaseModel):
     name: str = Field(max_length=100)
+
+
+class TagUpdateModel(BaseModel):
+    name: str | None = None
