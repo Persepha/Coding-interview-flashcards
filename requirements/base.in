@@ -6,3 +6,4 @@ pydantic
 asyncpg
 sqlalchemy
 python-dotenv
+fastapi-users[sqlalchemy]

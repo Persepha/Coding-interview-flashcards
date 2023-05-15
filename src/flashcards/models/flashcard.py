@@ -2,6 +2,7 @@ from sqlalchemy import (Column, ForeignKey, Identity, Integer, String, Table,
                         Text)
 from sqlalchemy.orm import relationship
 
+from auth.models import User
 from database import Base
 
 
@@ -13,6 +14,9 @@ class Flashcard(Base):
     answer = Column(Text)
 
     tags = relationship("Tag", secondary="flashcard_tags", back_populates="flashcards")
+
+    creator_id = Column(Integer, ForeignKey(User.id))
+    creator = relationship("User", back_populates="flashcards")
 
 
 flashcard_tags = Table(

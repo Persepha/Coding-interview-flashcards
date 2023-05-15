@@ -15,6 +15,8 @@ class AppSettings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_PORT: str
 
+    SECRET_AUTH: str
+
     SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
 
     @validator("SQLALCHEMY_DATABASE_URI", pre=True)

@@ -3,6 +3,7 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
+from auth.models import User
 from config import settings
 from database import Base, metadata
 from flashcards.models.flashcard import Flashcard

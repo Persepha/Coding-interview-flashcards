@@ -23,7 +23,9 @@ async def flashcard_list(*, session: AsyncSession) -> Iterable[Flashcard]:
 
 
 async def flashcard_with_tags_list(*, session: AsyncSession):
-    query = select(Flashcard).options(joinedload(Flashcard.tags))
+    query = select(Flashcard).options(
+        joinedload(Flashcard.tags), joinedload(Flashcard.creator)
+    )
     flashcards = await session.execute(query)
 
     return flashcards.scalars().unique().all()
@@ -56,12 +58,15 @@ async def get_tags_by_ids(
 
 
 async def flashcard_create(
-    *, session: AsyncSession, flashcard_dto: FlashcardWithTagsCreateModel
+    *,
+    session: AsyncSession,
+    flashcard_dto: FlashcardWithTagsCreateModel,
+    creator_id: int,
 ) -> Flashcard:
     data = flashcard_dto.dict()
     tags_ids = data.pop("tags_ids")
 
-    new_flashcard = Flashcard(**data)
+    new_flashcard = Flashcard(**data, creator_id=creator_id)
 
     if tags_ids is not None:
         tags = await get_tags_by_ids(session=session, tags_ids=tags_ids)
