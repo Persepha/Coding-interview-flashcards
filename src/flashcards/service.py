@@ -80,7 +80,9 @@ async def flashcard_create(
 
 async def get_flashcard_by_id(*, id: int, session: AsyncSession) -> Flashcard:
     query = (
-        select(Flashcard).options(joinedload(Flashcard.tags)).where(Flashcard.id == id)
+        select(Flashcard)
+        .options(joinedload(Flashcard.tags), joinedload(Flashcard.creator))
+        .where(Flashcard.id == id)
     )
     flashcard = await session.execute(query)
 
