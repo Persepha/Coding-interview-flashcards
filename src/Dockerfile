@@ -8,4 +8,4 @@ RUN python3 -m  venv /opt/venv
 RUN /opt/venv/bin/pip install pip --upgrade &&  \
     /opt/venv/bin/pip install -r requirements.txt
 
-CMD /opt/venv/bin/gunicorn main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:80
+RUN /opt/venv/uvicorn main:app --host 0.0.0.0 --port $PORT
