@@ -5,7 +5,7 @@ services:
       - postgres_db
     build:
       context: ./src
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     image: python-flashcards-local:v1
     env_file:
       - src/.env
