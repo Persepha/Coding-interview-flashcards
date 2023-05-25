@@ -6,11 +6,11 @@ from auth.models import User
 from auth.service import get_user_manager
 from config import settings
 
-cookie_transport = CookieTransport(cookie_max_age=3600)
+cookie_transport = CookieTransport(cookie_max_age=86400)
 
 
 def get_jwt_strategy() -> JWTStrategy:
-    return JWTStrategy(secret=settings.SECRET_AUTH, lifetime_seconds=3600)
+    return JWTStrategy(secret=settings.SECRET_AUTH, lifetime_seconds=86400)
 
 
 auth_backend = AuthenticationBackend(
