@@ -1,23 +1,17 @@
-from fastapi import Depends, HTTPException
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlette import status
 
+from common.dependencies import get_obj_or_404
 from database import get_async_session
 from flashcards.models.flashcard import Flashcard
 from flashcards.models.tag import Tag
-from flashcards.service import get_flashcard_by_id, get_tag_by_id
+from flashcards.models.topic import Topic
 
 
 async def valid_flashcard_id(
     *, id: int, session: AsyncSession = Depends(get_async_session)
 ) -> Flashcard:
-    flashcard = await get_flashcard_by_id(id=id, session=session)
-
-    if not flashcard:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Flashcard with the id {id} is not available",
-        )
+    flashcard = await get_obj_or_404(id=id, session=session, obj=Flashcard)
 
     return flashcard
 
@@ -25,12 +19,14 @@ async def valid_flashcard_id(
 async def valid_tag_id(
     *, id: int, session: AsyncSession = Depends(get_async_session)
 ) -> Tag:
-    tag = await get_tag_by_id(id=id, session=session)
-
-    if not tag:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Tag with the id {id} is not available",
-        )
+    tag = await get_obj_or_404(id=id, session=session, obj=Tag)
 
     return tag
+
+
+async def valid_topic_id(
+    *, id: int, session: AsyncSession = Depends(get_async_session)
+) -> Topic:
+    topic = await get_obj_or_404(session=session, obj=Topic, id=id)
+
+    return topic

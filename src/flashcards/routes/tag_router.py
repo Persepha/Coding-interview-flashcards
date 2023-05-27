@@ -12,25 +12,25 @@ from flashcards.dependencies import valid_tag_id
 from flashcards.models.tag import Tag
 from flashcards.schemas.tag_schemas import (TagCreateModel, TagModel,
                                             TagUpdateModel)
-from flashcards.service import tag_create, tag_delete, tag_list, tag_update
+from flashcards.services.tag import tag_crud
 
 router = APIRouter()
 
 
 @router.get("/", response_model=List[TagModel])
 async def tag_list_api(session: AsyncSession = Depends(get_async_session)):
-    tags = await tag_list(session=session)
+    tags = await tag_crud.get_list(session=session)
 
     return tags
 
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 async def tag_create_api(
-    tag: TagCreateModel,
+    create_dto: TagCreateModel,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_superuser),
 ):
-    new_tag = await tag_create(session=session, tag_dto=tag)
+    new_tag = await tag_crud.create(session=session, create_dto=create_dto)
 
     return new_tag
 
@@ -46,7 +46,7 @@ async def tag_delete_api(
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_superuser),
 ):
-    deleted_tag = await tag_delete(session=session, tag=tag)
+    deleted_tag = await tag_crud.delete(session=session, obj=tag)
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
@@ -56,14 +56,12 @@ async def tag_delete_api(
     status_code=status.HTTP_202_ACCEPTED,
     response_model=TagModel,
 )
-async def flashcard_update_api(
-    tag_update_dto: TagUpdateModel,
+async def tag_update_api(
+    update_dto: TagUpdateModel,
     tag: Tag = Depends(valid_tag_id),
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_superuser),
 ):
-    updated_tag = await tag_update(
-        session=session, tag=tag, tag_update_dto=tag_update_dto
-    )
+    updated_tag = await tag_crud.update(session=session, obj=tag, update_dto=update_dto)
 
     return updated_tag

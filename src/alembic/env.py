@@ -8,6 +8,7 @@ from config import settings
 from database import Base, metadata
 from flashcards.models.flashcard import Flashcard
 from flashcards.models.tag import Tag
+from flashcards.models.topic import Topic
 
 config = context.config
 

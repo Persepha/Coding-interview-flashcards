@@ -15,3 +15,4 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     date_joined = Column(TIMESTAMP, default=datetime.utcnow)
 
     flashcards = relationship("Flashcard", back_populates="creator")
+    collections = relationship("Collection", back_populates="creator")
