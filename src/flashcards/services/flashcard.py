@@ -1,5 +1,6 @@
-from typing import Iterable
+from typing import Iterable, List
 
+from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
@@ -75,6 +76,24 @@ class CRUDFlashcard(CRUDBase[Flashcard, FlashcardCreateModel, FlashcardUpdateMod
         await session.commit()
 
         return flashcard
+
+    async def get_flashcards_by_ids(
+        self, *, session: AsyncSession, flashcards_ids: List[int]
+    ) -> Iterable[Flashcard]:
+        flashcards: List[Flashcard] = []
+
+        for flashcard_id in flashcards_ids:
+            flashcard = await self.get_by_id(id=flashcard_id, session=session)
+
+            if not flashcard:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"Flashcard with the id {flashcard_id} is not available",
+                )
+
+            flashcards.append(flashcard)
+
+        return flashcards
 
 
 flashcard_crud = CRUDFlashcard(Flashcard)
