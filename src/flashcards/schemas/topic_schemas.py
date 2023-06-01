@@ -1,9 +1,14 @@
+from typing import List
+
 from pydantic import BaseModel, Field
+
+from flashcards.schemas.collection_schemas import CollectionModel
 
 
 class TopicModel(BaseModel):
     id: int
     name: str
+    collections: List[CollectionModel]
 
     class Config:
         orm_mode = True

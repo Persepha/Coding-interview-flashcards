@@ -39,10 +39,18 @@ async def flashcard_create_api(
 
 
 @router.get(
-    "/{id}", status_code=status.HTTP_200_OK, response_model=FlashcardWithTagsModel
+    "/{id}",
+    status_code=status.HTTP_200_OK,
+    response_model=FlashcardWithTagsModel,
 )
-async def flashcard_detail_api(flashcard: Flashcard = Depends(valid_flashcard_id)):
-    return flashcard
+async def flashcard_detail_api(
+    flashcard: Flashcard = Depends(valid_flashcard_id),
+    session: AsyncSession = Depends(get_async_session),
+):
+    flashcard_with_tags = await flashcard_crud.get_flashcard_with_tags_by_id(
+        id=flashcard.id, session=session
+    )
+    return flashcard_with_tags
 
 
 @router.delete("/{id}/delete", status_code=status.HTTP_204_NO_CONTENT)
@@ -67,8 +75,14 @@ async def flashcard_update_api(
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_superuser),
 ):
+    flashcard_with_tags = await flashcard_crud.get_flashcard_with_tags_by_id(
+        id=flashcard.id, session=session
+    )
+
     updated_flashcard = await flashcard_crud.update(
-        session=session, flashcard=flashcard, flashcard_update_dto=flashcard_update_dto
+        session=session,
+        flashcard=flashcard_with_tags,
+        flashcard_update_dto=flashcard_update_dto,
     )
 
     return updated_flashcard

@@ -4,14 +4,20 @@ from pydantic import BaseModel
 
 from auth.schemas import UserRead
 from flashcards.schemas.flashcard_schemas import FlashcardModel
-from flashcards.schemas.topic_schemas import TopicModel
+
+
+class TopicCollectionModel(BaseModel):
+    name: str
+
+    class Config:
+        orm_mode = True
 
 
 class CollectionModel(BaseModel):
     id: int
     name: str
     creator: UserRead
-    topic: TopicModel
+    topic: TopicCollectionModel
     flashcards: List[FlashcardModel]
 
     class Config:

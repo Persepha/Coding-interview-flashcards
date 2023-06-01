@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.dependencies import get_obj_or_404
 from database import get_async_session
-from flashcards.models.flashcard import Flashcard
+from flashcards.models.flashcard import Collection, Flashcard
 from flashcards.models.tag import Tag
 from flashcards.models.topic import Topic
 
@@ -30,3 +30,11 @@ async def valid_topic_id(
     topic = await get_obj_or_404(session=session, obj=Topic, id=id)
 
     return topic
+
+
+async def valid_collection_id(
+    *, id: int, session: AsyncSession = Depends(get_async_session)
+) -> Collection:
+    collection = await get_obj_or_404(session=session, obj=Collection, id=id)
+
+    return collection

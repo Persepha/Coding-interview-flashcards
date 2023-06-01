@@ -10,4 +10,6 @@ class Topic(Base):
     id = Column(Integer, Identity(cycle=True), primary_key=True)
     name = Column(String(100))
 
-    collections = relationship("Collection", back_populates="topic")
+    collections = relationship(
+        "Collection", back_populates="topic", cascade="all, delete"
+    )

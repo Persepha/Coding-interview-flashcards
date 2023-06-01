@@ -26,6 +26,23 @@ class CRUDCollection(
 
         return collection_list.scalars().unique().all()
 
+    async def get_collection_by_id(
+        self, *, id: int, session: AsyncSession
+    ) -> Collection:
+        query = (
+            select(Collection)
+            .options(
+                joinedload(Collection.flashcards),
+                joinedload(Collection.creator),
+                joinedload(Collection.topic),
+            )
+            .where(Collection.id == id)
+        )
+
+        collection = await session.execute(query)
+
+        return collection.scalar()
+
     async def create_with_flashcards(
         self,
         *,
@@ -52,6 +69,38 @@ class CRUDCollection(
         await session.commit()
 
         return new_collection
+
+    async def update(
+        self,
+        *,
+        session: AsyncSession,
+        collection: Collection,
+        collection_update_dto: CollectionUpdateModel
+    ):
+        data = collection_update_dto.dict(exclude_unset=True)
+
+        print("----------------------------------------------------------------")
+        print(data)
+        flashcards_ids = data.pop("flashcards_ids", None)
+        topic_id = data.pop("topic_id", None)
+
+        for field in data:
+            if getattr(collection, field) != data[field]:
+                setattr(collection, field, data[field])
+
+        if flashcards_ids is not None:
+            flashcards = await flashcard_crud.get_flashcards_by_ids(
+                session=session, flashcards_ids=flashcards_ids
+            )
+            collection.flashcards = flashcards
+
+        if topic_id is not None:
+            topic = await get_obj_or_404(session=session, id=topic_id, obj=Topic)
+            collection.topic_id = topic_id
+
+        await session.commit()
+
+        return collection
 
 
 collection_crud = CRUDCollection(Collection)
