@@ -1,4 +1,5 @@
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from common.dependencies import get_obj_or_404
@@ -38,3 +39,20 @@ async def valid_collection_id(
     collection = await get_obj_or_404(session=session, obj=Collection, id=id)
 
     return collection
+
+
+async def valid_topic_name(
+    *, name: str, session: AsyncSession = Depends(get_async_session)
+) -> Topic:
+    query = select(Topic).where(func.lower(Topic.name) == func.lower(name))
+    result = await session.execute(query)
+
+    topic = result.scalar()
+
+    if not topic:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Topic with the name {name} is not available",
+        )
+
+    return topic

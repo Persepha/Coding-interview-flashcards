@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from auth.auth_config import current_superuser
 from auth.models import User
 from database import get_async_session
-from flashcards.dependencies import valid_topic_id
+from flashcards.dependencies import valid_topic_id, valid_topic_name
 from flashcards.models.topic import Topic
 from flashcards.schemas.topic_schemas import (TopicCreateModel, TopicModel,
                                               TopicUpdateModel)
@@ -33,9 +33,9 @@ async def topic_create_api(
     return new_topic
 
 
-@router.get("/{id}", status_code=status.HTTP_200_OK, response_model=TopicModel)
+@router.get("/{name}", status_code=status.HTTP_200_OK, response_model=TopicModel)
 async def topic_detail_api(
-    topic: Topic = Depends(valid_topic_id),
+    topic: Topic = Depends(valid_topic_name),
     session: AsyncSession = Depends(get_async_session),
 ):
     topic_with_collections = await topic_crud.get_by_id(session=session, id=topic.id)
