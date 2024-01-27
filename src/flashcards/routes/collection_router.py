@@ -1,3 +1,4 @@
+import json
 from typing import List
 
 from fastapi import APIRouter, Depends, Response, status
@@ -48,7 +49,9 @@ async def collection_detail_api(
     collection_with_flashcards = await collection_crud.get_collection_by_id(
         id=collection.id, session=session
     )
-
+    print("-------------FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF--------")
+    print(collection_with_flashcards)
+    print("-------------FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF--------")
     return collection_with_flashcards
 
 

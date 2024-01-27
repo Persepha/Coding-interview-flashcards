@@ -9,8 +9,6 @@ class FlashcardModel(BaseModel):
     id: int
     question: str
     answer: str
-    creator_id: int
-    creator: UserRead
 
     class Config:
         orm_mode = True

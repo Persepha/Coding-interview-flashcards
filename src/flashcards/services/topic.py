@@ -1,8 +1,8 @@
 from typing import Iterable
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, load_only, selectinload
 
 from common.services import CRUDBase
 from flashcards.models.flashcard import Collection
@@ -29,6 +29,25 @@ class CRUDTopic(CRUDBase[Topic, TopicCreateModel, TopicUpdateModel]):
             select(Topic)
             .options(joinedload(Topic.collections).subqueryload(Collection.flashcards))
             .options(joinedload(Topic.collections).subqueryload(Collection.creator))
+            .where(Topic.id == id)
+        )
+
+        topic = await session.execute(query)
+
+        return topic.scalar()
+
+    async def get_preview_by_id(self, *, session: AsyncSession, id: int) -> Topic:
+        # query = (
+        #     select(Topic).options(joinedload(Topic.collections)).where(Topic.id == id)
+        # )
+
+        query = (
+            select(Topic)
+            .options(
+                selectinload(Topic.collections).load_only(
+                    Collection.id, Collection.name
+                )
+            )
             .where(Topic.id == id)
         )
 

@@ -1,5 +1,6 @@
 from sqlalchemy import (Column, ForeignKey, Identity, Integer, String, Table,
                         Text)
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import relationship
 
 from auth.models import User
