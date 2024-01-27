@@ -24,6 +24,14 @@ class CollectionModel(BaseModel):
         orm_mode = True
 
 
+class CollectionPreviewModel(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        orm_mode = True
+
+
 class CollectionCreateModel(BaseModel):
     name: str
     topic_id: int

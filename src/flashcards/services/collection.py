@@ -1,6 +1,6 @@
 from typing import Iterable
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
@@ -79,8 +79,6 @@ class CRUDCollection(
     ):
         data = collection_update_dto.dict(exclude_unset=True)
 
-        print("----------------------------------------------------------------")
-        print(data)
         flashcards_ids = data.pop("flashcards_ids", None)
         topic_id = data.pop("topic_id", None)
 

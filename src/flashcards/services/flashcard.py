@@ -15,9 +15,7 @@ from flashcards.services.tag import tag_crud
 
 class CRUDFlashcard(CRUDBase[Flashcard, FlashcardCreateModel, FlashcardUpdateModel]):
     async def get_list_with_tags(self, *, session: AsyncSession) -> Iterable[Flashcard]:
-        query = select(Flashcard).options(
-            joinedload(Flashcard.tags), joinedload(Flashcard.creator)
-        )
+        query = select(Flashcard).options(joinedload(Flashcard.tags))
         flashcards = await session.execute(query)
 
         return flashcards.scalars().unique().all()
@@ -48,7 +46,7 @@ class CRUDFlashcard(CRUDBase[Flashcard, FlashcardCreateModel, FlashcardUpdateMod
     ) -> Flashcard:
         query = (
             select(Flashcard)
-            .options(joinedload(Flashcard.tags), joinedload(Flashcard.creator))
+            .options(joinedload(Flashcard.tags))
             .where(Flashcard.id == id)
         )
         flashcard = await session.execute(query)
